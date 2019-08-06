@@ -34,7 +34,7 @@
                                         <input class="input form-control input-borders" type="password" name="password" id="password" placeholder="密码">
                                     </div>
                                     <div class="form-group">
-                                        <input class="input form-control input-borders" type="password" name="repassword" id="repassword" placeholder="验证密码">
+                                        <input class="input form-control input-borders" type="password" name="repassword" id="repassword" placeholder="确认密码">
                                     </div>
                                     <div class="form-group">
                                         <input class="input form-control input-borders" type="text" name="mobile" id="mobile" placeholder="手机号">

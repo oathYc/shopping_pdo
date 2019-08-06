@@ -139,7 +139,6 @@ session_start();
                                <input type="hidden" id="loginUser" value="'.$_SESSION['uid'].'" />
                                   <a href="#" class="dropdownn" data-toggle="modal" data-target="#myModal" ><i class="fa fa-user-o"></i>  '.$row["first_name"].'</a>
                                   <div class="dropdownn-content">
-                                    <a href="" data-toggle="modal" data-target="#profile"><i class="fa fa-user-circle" aria-hidden="true" ></i>账号</a>
                                     <a href="logout.php"  ><i class="fa fa-sign-in" aria-hidden="true"></i>注销</a>
                                     
                                   </div>
