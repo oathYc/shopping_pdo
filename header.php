@@ -131,7 +131,9 @@ session_start();
 						<li><?php
                              include "db.php";
                             if(isset($_SESSION["uid"])){
-                                $sql = "SELECT first_name FROM user_info WHERE user_id='$_SESSION[uid]'";
+                                $uid = $_SESSION['uid'];
+                                var_dump($uid);
+                                $sql = "SELECT first_name FROM user_info WHERE user_id='$uid'";
                                 $row = $dbh->query($sql)->fetch();
                                 var_dump($row);
                                     echo '
