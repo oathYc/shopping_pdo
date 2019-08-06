@@ -111,14 +111,11 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 	} else {
 		
 		$sql = "INSERT INTO user_info(`first_name`,`last_name`,`email`,`password`,`mobile`,`address1`,`address2`) VALUE('$f_name','$l_name','$email','$password','$mobile','$address1','$address2')";
-		var_dump($sql);
 		$run_query = $dbh->query($sql);
-		var_dump($run_query);
-		if($run_query->rowCount()){
+		if($run_query->rowCount() < 1){
 			echo '注册失败，请重试';exit;
 		}else{
 			$lastId = $dbh->lastInsertId();
-			var_dump($lastId);
 			$_SESSION["uid"] =$lastId;
 			$_SESSION["name"] = $f_name;
 			$ip_add = getenv("REMOTE_ADDR");
