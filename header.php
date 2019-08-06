@@ -132,7 +132,8 @@ session_start();
                              include "db.php";
                             if(isset($_SESSION["uid"])){
                                 $sql = "SELECT first_name FROM user_info WHERE user_id='$_SESSION[uid]'";
-                                foreach($dbh->query($sql) as $row){
+                                $row = $dbh->query($sql)->fetch();
+                                var_dump($row);
                                     echo '
                                <div class="dropdownn">
                                <input type="hidden" id="loginUser" value="'.$_SESSION['uid'].'" />
@@ -143,8 +144,6 @@ session_start();
                                     
                                   </div>
                                 </div>';
-                                    }
-
                             }else{
                                 echo '
                                 <div class="dropdownn">
