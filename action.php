@@ -293,10 +293,10 @@ if (isset($_POST["Common"])) {
 
 	if (isset($_SESSION["uid"])) {
 		//When user is logged in this query will execute
-		$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.user_id='$_SESSION[uid]'";
+		$sql = "SELECT a.product_id,a.product_title,a.product_desc,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.user_id='$_SESSION[uid]'";
 	}else{
 		//When user is not logged in this query will execute
-		$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.ip_add='$ip_add' AND b.user_id < 0";
+		$sql = "SELECT a.product_id,a.product_title,a.product_desc,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.ip_add='$ip_add' AND b.user_id < 0";
 	}
 	$query = $dbh->query($sql);
 	if (isset($_POST["getCartItem"])) {
@@ -323,7 +323,7 @@ if (isset($_POST["Common"])) {
 												</div>
 												<div class="product-body">
 													<h3 class="product-name"><a href="#">'.$product_title.'</a></h3>
-													<h4 class="product-price"><span class="qty">'.$n.'</span>$'.$product_price.'</h4>
+													<h4 class="product-price"><span class="qty">1</span>$'.$product_price.'</h4>
 												</div>
 												
 											</div>'
@@ -334,7 +334,7 @@ if (isset($_POST["Common"])) {
 			}
             
             echo '<div class="cart-summary">
-				    <small class="qty">'.$n.' Item(s) selected</small>
+				    <small class="qty">'.$n.' 件商品</small>
 				    <h5>$'.$total_price.'</h5>
 				</div>'
             ?>
@@ -358,10 +358,10 @@ if (isset($_POST["Common"])) {
 	               <table id="cart" class="table table-hover table-condensed" id="">
     				<thead>
 						<tr>
-							<th style="width:50%">Product</th>
-							<th style="width:10%">Price</th>
-							<th style="width:8%">Quantity</th>
-							<th style="width:7%" class="text-center">Subtotal</th>
+							<th style="width:50%">商品</th>
+							<th style="width:10%">价格</th>
+							<th style="width:8%">数量</th>
+							<th style="width:7%" class="text-center">总计</th>
 							<th style="width:10%"></th>
 						</tr>
 					</thead>
@@ -374,6 +374,7 @@ if (isset($_POST["Common"])) {
 					$product_title = $row["product_title"];
 					$product_price = $row["product_price"];
 					$product_image = $row["product_image"];
+					$product_desc = $row['product_desc'];
 					$cart_item_id = $row["id"];
 					$qty = $row["qty"];
 
@@ -389,7 +390,7 @@ if (isset($_POST["Common"])) {
 									</div>
 									<div class="col-sm-6">
 										<div style="max-width=50px;">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
+										<p>'.$product_desc.'</p>
 										</div>
 									</div>
 									
@@ -420,7 +421,7 @@ if (isset($_POST["Common"])) {
 				<tfoot>
 					
 					<tr>
-						<td><a href="store.php" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+						<td><a href="store.php" class="btn btn-warning"><i class="fa fa-angle-left"></i> 继续购物</a></td>
 						<td colspan="2" class="hidden-xs"></td>
 						<td class="hidden-xs text-center"><b class="net_total" ></b></td>
 						<div id="issessionset"></div>
@@ -430,12 +431,13 @@ if (isset($_POST["Common"])) {
 				if (!isset($_SESSION["uid"])) {
 					echo '
 					
-							<a href="" data-toggle="modal" data-target="#Modal_register" class="btn btn-success">Ready to Checkout</a></td>
+							<a  data-toggle="modal" data-target="#Modal_register" class="btn btn-success">结账</a></td>
 								</tr>
 							</tfoot>
 				
 							</table></div></div>';
                 }else if(isset($_SESSION["uid"])){
+					$uid = $_SESSION['uid'];
 					//Paypal checkout form
 					echo '
 					</form>
@@ -444,11 +446,11 @@ if (isset($_POST["Common"])) {
 							<input type="hidden" name="cmd" value="_cart">
 							<input type="hidden" name="business" value="shoppingcart@puneeth.com">
 							<input type="hidden" name="upload" value="1">';
-							  
+
 							$x=0;
-							$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.user_id='$_SESSION[uid]'";
-							$query = $dbh->$query($sql);
-							foreach($query as $row){
+							$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.user_id='$uid'";
+							$result = $dbh->query($sql);
+							foreach($result as $row){
 								$x++;
 								echo  	
 
@@ -465,7 +467,7 @@ if (isset($_POST["Common"])) {
 									<input type="hidden" name="cancel_return" value="http://localhost/myfiles/public_html/cancel.php"/>
 									<input type="hidden" name="currency_code" value="USD"/>
 									<input type="hidden" name="custom" value="'.$_SESSION["uid"].'"/>
-									<input type="submit" id="submit" name="login_user_with_product" name="submit" class="btn btn-success" value="Ready to Checkout">
+<a href="#" onclick="javascript:alert(\'该功能维护中\');" data-toggle="modal"  class="btn btn-success">结账</a>
 									</form></td>
 									
 									</tr>
