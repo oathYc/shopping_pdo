@@ -110,11 +110,7 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 		exit();
 	} else {
 		
-		$sql = "INSERT INTO `user_info` 
-		( `first_name`, `last_name`, `email`, 
-		`password`, `mobile`, `address1`, `address2`) 
-		VALUES ( '$f_name', '$l_name', '$email', 
-		'$password', '$mobile', '$address1', '$address2')";
+		$sql = "INSERT INTO `user_info`(`first_name`,`last_name`,`email`,`password`,`mobile`,`address1`,`address2`) VALUES ('$f_name','$l_name','$email','$password','$mobile','$address1','$address2')";
 		$run_query = $dbh->query($sql);
 		var_dump($run_query);
 		if($run_query->rowCount()){
