@@ -7,10 +7,9 @@ if(isset($_POST['btn_save']))
 {
     $cat_name = $_POST['cat_name'];
 
-    mysqli_query($con,"insert into categories(cat_title) values ('$cat_name')")
+    $dbh->query("insert into categories(cat_title) values ('$cat_name')")
     or die ("Query 1 is inncorrect........");
     header("location: cate.php");
-    mysqli_close($con);
 }
 ?>
 <!DOCTYPE html>

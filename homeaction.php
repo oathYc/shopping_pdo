@@ -47,8 +47,8 @@ if(isset($_POST["categoryhome"])){
 
 if(isset($_POST["page"])){
 	$sql = "SELECT * FROM products";
-	$run_query = mysqli_query($con,$sql);
-	$count = mysqli_num_rows($run_query);
+	$run_query = $dbh->query($sql);
+	$count = $run_query->rowCount();
 	$pageno = ceil($count/2);
 	for($i=1;$i<=$pageno;$i++){
 		echo "
@@ -104,10 +104,10 @@ if(isset($_POST["gethomeProduct"])){
 	}
     
 	$product_query = "SELECT * FROM products,categories WHERE product_cat=cat_id AND product_id BETWEEN 71 AND 74";
-	$run_query = mysqli_query($con,$product_query);
-	if(mysqli_num_rows($run_query) > 0){
+	$run_query = $dbh->query($product_query);
+	if($run_query->rowCount() > 0){
         
-		while($row = mysqli_fetch_array($run_query)){
+		foreach($run_query as $row){
 			$pro_id    = $row['product_id'];
 			$pro_cat   = $row['product_cat'];
 			$pro_brand = $row['product_brand'];
@@ -166,8 +166,8 @@ if(isset($_POST["get_seleted_Category"]) ||  isset($_POST["search"])){
 		$sql = "SELECT * FROM products,categories WHERE product_cat=cat_id AND product_keywords LIKE '%$keyword%'";
 	}
 	
-	$run_query = mysqli_query($con,$sql);
-	while($row=mysqli_fetch_array($run_query)){
+	$run_query = $dbh->query($sql);
+	foreach($run_query as $row){
 			$pro_id    = $row['product_id'];
 			$pro_cat   = $row['product_cat'];
 			$pro_brand = $row['product_brand'];

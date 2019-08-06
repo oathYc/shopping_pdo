@@ -20,17 +20,17 @@ if (isset($_SESSION["uid"])) {
     
     
     $sql0="SELECT order_id from `orders_info`";
-    $runquery=mysqli_query($con,$sql0);
-    if (mysqli_num_rows($runquery) == 0) {
-        echo( mysqli_error($con));
+    $runquery = $dbh->query($sql0);
+    if ($runquery->rowCount() == 0) {
+        echo('no order');
         $order_id=1;
-    }else if (mysqli_num_rows($runquery) > 0) {
+    }else if ($runquery->rowCount() > 0) {
         $sql2="SELECT MAX(order_id) AS max_val from `orders_info`";
-        $runquery1=mysqli_query($con,$sql2);
-        $row = mysqli_fetch_array($runquery1);
+        $runquery1=$dbh->query($sql2);
+        $row = $runquery1->fetch();
         $order_id= $row["max_val"];
         $order_id=$order_id+1;
-        echo( mysqli_error($con));
+        echo( "$order_id");
     }
 
 	$sql = "INSERT INTO `orders_info` 
@@ -40,7 +40,7 @@ if (isset($_SESSION["uid"])) {
     '$address', '$city', '$state', '$zip','$cardname','$cardnumberstr','$expdate','$total_count','$prod_total','$cvv')";
 
 
-    if(mysqli_query($con,$sql)){
+    if($dbh->query($sql)->rowCount()){
         $i=1;
         $prod_id_=0;
         $prod_price_=0;
@@ -57,16 +57,16 @@ if (isset($_SESSION["uid"])) {
             $sql1="INSERT INTO `order_products` 
             (`order_pro_id`,`order_id`,`product_id`,`qty`,`amt`) 
             VALUES (NULL, '$order_id','$prod_id','$prod_qty','$sub_total')";
-            if(mysqli_query($con,$sql1)){
+            if($dbh->query($sql1)->rowCount()){
                 $del_sql="DELETE from cart where user_id=$user_id";
-                if(mysqli_query($con,$del_sql)){
+                if($dbh->query($del_sql)->rowCount()){
                     echo"<script>window.location.href='store.php'</script>";
                 }else{
-                    echo(mysqli_error($con));
+                    echo('fail');
                 }
 
             }else{
-                echo(mysqli_error($con));
+                echo('fail');
             }
             $i++;
 

@@ -3,13 +3,12 @@
 session_start();
 include("../db.php");
 
-
 if(isset($_POST['submit']))
 {
 $product_name=$_POST['product_name'];
 $details=$_POST['details'];
 $price=$_POST['price'];
-$c_price=$_POST['c_price'];
+//$c_price=$_POST['c_price'];
 $product_type=$_POST['product_type'];
 $brand=$_POST['brand'];
 $tags=$_POST['tags'];
@@ -26,13 +25,11 @@ if($picture_type=="image/jpeg" || $picture_type=="image/jpg" || $picture_type=="
 	
 		$pic_name=time()."_".$picture_name;
 		move_uploaded_file($picture_tmp_name,"../product_images/".$pic_name);
-		
-mysqli_query($con,"insert into products (product_cat, product_brand,product_title,product_price, product_desc, product_image,product_keywords) values ('$product_type','$brand','$product_name','$price','$details','$pic_name','$tags')") or die ("query incorrect");
-
- header("location: sumit_form.php?success=1");
+}else{
+    $pic_name = '';
 }
-
-mysqli_close($con);
+    $result = $dbh->query("insert into products (product_cat, product_brand,product_title,product_price, product_desc, product_image,product_keywords) values ('$product_type','$brand','$product_name','$price','$details','$pic_name','$tags')") or die ("query incorrect");
+    header("location: sumit_form.php?success=1");
 }
 ?>
 <!DOCTYPE html>
@@ -77,7 +74,7 @@ mysqli_close($con);
 
 
     </div>
-        </div>  
+        </div>
         <div class="col-lg-5">
         <div class="well">
 <h3>分类</h3>
@@ -89,11 +86,11 @@ mysqli_close($con);
 <br>
 <p>其他标签</p>
 <input type="text" name="tags" id="tags" class="form-control" placeholder="夏季、柔软、棉质等">
-</div>          
+</div>
 </div>
 
 <div align="center">
-    <button type="submit" name="submit" id="submit" class="btn btn-default" style="width:100px; height:60px"> 取消</button>
+    <button type="submit"  class="btn btn-default" style="width:100px; height:60px" onclick="javascript:window.location.reload()"> 取消</button>
     <button type="submit" name="submit" id="submit" class="btn btn-success" style="width:150px; height:60px""> 添加</button>
     </div>
         </form>

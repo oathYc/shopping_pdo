@@ -5,12 +5,12 @@ include("../db.php");
 if(isset($_GET['action']) && $_GET['action']!="" && $_GET['action']=='delete')
 {
 $brand_id=$_GET['brand_id'];
-    $had = mysqli_query($con,"select * from products where product_brand = '$brand_id' ")or die("query is incorrect...");
-    if($row = mysqli_fetch_row($had)){
+    $had = $dbh->query("select * from products where product_brand = '$brand_id' ")or die("query is incorrect...");
+    if($had->rowCount() > 0){
         die("<script>alert('该品牌下已有商品，请先删除商品');setTimeout(function(){history.go(-1);},1000)</script>");
     }else{
         /*this is delet quer*/
-        mysqli_query($con,"delete from brands where brand_id='$brand_id'")or die("query is incorrect...");
+        $dbh->query("delete from brands where brand_id='$brand_id'")or die("query is incorrect...");
     }
 }
 ?>
@@ -41,18 +41,16 @@ $brand_id=$_GET['brand_id'];
 	<th><a href="add_brand.php">新增</a></th>
     </tr>
 <?php 
-$result=mysqli_query($con,"select * from brands")or die ("query 2 incorrect.......");
+$result=$dbh->query("select * from brands")or die ("query 2 incorrect.......");
 
-while(list($brand_id,$brand_name)=
-mysqli_fetch_array($result))
+foreach($result as $row)
 {
-echo "<tr><td>$brand_id</td><td>$brand_name</td>";
+echo "<tr><td>".$row['brand_id']."</td><td>".$row['brand_title']."</td>";
 
 echo"<td>
-<a href='brand.php?brand_id=$brand_id&action=delete'>删除</a>
+<a href='brand.php?brand_id=".$row['brand_id']."&action=delete'>删除</a>
 </td></tr>";
 }
-mysqli_close($con);
 ?>
 </table>
 </div>	

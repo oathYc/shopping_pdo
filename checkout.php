@@ -109,9 +109,9 @@ span.price {
 		<?php
 		if(isset($_SESSION["uid"])){
 			$sql = "SELECT * FROM user_info WHERE user_id='$_SESSION[uid]'";
-			$query = mysqli_query($con,$sql);
-			$row=mysqli_fetch_array($query);
-		
+			$query = $dbh->query($sql);
+			$row = $query->fetch();
+
 		echo'
 			<div class="col-75">
 				<div class="container-checkout">
@@ -187,8 +187,8 @@ span.price {
 						$quantity_ = $_POST['quantity_'.$i];
 						$total=$total+$amount_ ;
 						$sql = "SELECT product_id FROM products WHERE product_title='$item_name_'";
-						$query = mysqli_query($con,$sql);
-						$row=mysqli_fetch_array($query);
+						$query = $dbh->query($sql);
+						$row = $query->fetch();
 						$product_id=$row["product_id"];
 						echo "	
 						<input type='hidden' name='prod_id_$i' value='$product_id'>
@@ -251,8 +251,8 @@ span.price {
 						$quantity_ = $_POST['quantity_'.$i];
 						$total=$total+$amount_ ;
 						$sql = "SELECT product_id FROM products WHERE product_title='$item_name_'";
-						$query = mysqli_query($con,$sql);
-						$row=mysqli_fetch_array($query);
+						$query = $dbh->query($sql);
+						$row = $query->fetch();
 						$product_id=$row["product_id"];
 					
 						echo "	

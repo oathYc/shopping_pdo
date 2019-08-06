@@ -6,12 +6,12 @@ if(isset($_GET['action']) && $_GET['action']!="" && $_GET['action']=='delete')
 {
     $cat_id=$_GET['cat_id'];
 
-    $had = mysqli_query($con,"select * from products where product_cat = '$cat_id' ")or die("query is incorrect...");
-    if($row = mysqli_fetch_row($had)){
+    $had = $dbh->query("select * from products where product_cat = '$cat_id' ")or die("query is incorrect...");
+    if($had->rowCount() > 0){
         die("<script>alert('该分类下已有商品，请先删除商品');setTimeout(function(){history.go(-1);},1000)</script>");
     }else{
         /*this is delet quer*/
-        mysqli_query($con,"delete from categories where cat_id='$cat_id'")or die("query is incorrect...");
+        $dbh->query("delete from categories where cat_id='$cat_id'")or die("query is incorrect...");
     }
 }
 ?>
@@ -42,17 +42,15 @@ if(isset($_GET['action']) && $_GET['action']!="" && $_GET['action']=='delete')
 	<th><a href="add_cate.php">新增</a></th>
     </tr>
 <?php 
-$result=mysqli_query($con,"select * from categories")or die ("query 2 incorrect.......");
-while(list($cat_id,$cat_name)=
-mysqli_fetch_array($result))
+$result=$dbh->query("select * from categories")or die ("query 2 incorrect.......");
+foreach($result as $row)
 {
-echo "<tr><td>$cat_id</td><td>$cat_name</td>";
+echo "<tr><td>".$row['cat_id']."</td><td>".$row['cat_title']."</td>";
 
 echo"<td>
-<a href='cate.php?cat_id=$cat_id&action=delete'>删除</a>
+<a href='cate.php?cat_id=".$row['cat_id']."&action=delete'>删除</a>
 </td></tr>";
 }
-mysqli_close($con);
 ?>
 </table>
 </div>	

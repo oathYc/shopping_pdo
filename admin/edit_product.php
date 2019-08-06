@@ -3,8 +3,15 @@
 session_start();
 include("../db.php");
 $product_id = $_REQUEST['product_id'];
-$result = mysqli_query($con,"select product_title,product_desc,product_price,product_image,product_cat,product_brand,product_keywords from products where product_id = '$product_id'");
-list($product_name,$product_detail,$product_price,$product_image,$product_cat,$product_brand,$product_keywords) = mysqli_fetch_array($result);
+$result = $dbh->query("select product_title,product_desc,product_price,product_image,product_cat,product_brand,product_keywords from products where product_id = '$product_id'");
+$arr = $result->fetch();
+$product_name=$arr['product_title'];
+$product_detail = $arr['product_desc'];
+$product_price = $arr['product_price'];
+$product_image=$arr['product_image'];
+$product_cat=$arr['product_cat'];
+$product_brand=$arr['product_brand'];
+$product_keywords=$arr['product_keywords'];
 if(isset($_POST['submit']))
 {
 $product_name=$_POST['product_name'];
@@ -30,9 +37,8 @@ if($_FILES['picture']['name'] && $_FILES['picture']['type']){
 }else{
     $pic_name = $_POST['pictureOld'];
 }
-    $result = mysqli_query($con,"update products set product_cat='$product_type',product_brand='$brand',product_title='$product_name',product_price='$price', product_desc='$details', product_image='$pic_name',product_keywords='$tags' where product_id = '$product_id'") or die ("query incorrect");
+    $result = $dbh->query("update products set product_cat='$product_type',product_brand='$brand',product_title='$product_name',product_price='$price', product_desc='$details', product_image='$pic_name',product_keywords='$tags' where product_id = '$product_id'") or die ("query incorrect");
     header("location: sumit_form.php?success=1");
-    mysqli_close($con);
 }
 ?>
 <!DOCTYPE html>

@@ -100,9 +100,9 @@ if(isset($_POST["getProduct"])){
 		$start = 0;
 	}
 	$product_query = "SELECT * FROM products,categories WHERE product_cat=cat_id LIMIT $start,$limit";
-	$run_query = mysqli_query($con,$product_query);
-	if(mysqli_num_rows($run_query) > 0){
-		while($row = mysqli_fetch_array($run_query)){
+	$run_query = $dbh->query($product_query);
+	if($run_query->rowCount() > 0){
+		foreach($run_query as $row){
 			$pro_id    = $row['product_id'];
 			$pro_cat   = $row['product_cat'];
 			$pro_brand = $row['product_brand'];
@@ -137,7 +137,7 @@ if(isset($_POST["getProduct"])){
 									
 									</div>
 									<div class='add-to-cart'>
-										<button pid='$pro_id' id='product' class='add-to-cart-btn block2-btn-towishlist' href='#'><i class='fa fa-shopping-cart'></i> add to cart</button>
+										<button pid='$pro_id' id='product' class='add-to-cart-btn block2-btn-towishlist' href='#'><i class='fa fa-shopping-cart'></i> 添加购物车</button>
 									</div>
 								</div>
 							</div>
@@ -163,9 +163,8 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
 		$sql = "SELECT * FROM products,categories WHERE product_cat=cat_id AND product_keywords LIKE '%$keyword%'";
        
 	}
-	
-	$run_query = mysqli_query($con,$sql);
-	while($row=mysqli_fetch_array($run_query)){
+	$run_query = $dbh->query($sql);
+	foreach($run_query as $row){
 			$pro_id    = $row['product_id'];
 			$pro_cat   = $row['product_cat'];
 			$pro_brand = $row['product_brand'];
@@ -220,8 +219,8 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
 		$user_id = $_SESSION["uid"];
 
 		$sql = "SELECT * FROM cart WHERE p_id = '$p_id' AND user_id = '$user_id'";
-		$run_query = mysqli_query($con,$sql);
-		$count = mysqli_num_rows($run_query);
+		$run_query = $dbh->query($sql);
+		$count = $run_query->rowCount();
 		if($count > 0){
 			echo "
 				<div class='alert alert-warning'>
@@ -233,7 +232,7 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
 			$sql = "INSERT INTO `cart`
 			(`p_id`, `ip_add`, `user_id`, `qty`) 
 			VALUES ('$p_id','$ip_add','$user_id','1')";
-			if(mysqli_query($con,$sql)){
+			if($dbh->query($sql)->rowCount()){
 				echo "
 					<div class='alert alert-success'>
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
@@ -244,8 +243,8 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
 		}
 		}else{
 			$sql = "SELECT id FROM cart WHERE ip_add = '$ip_add' AND p_id = '$p_id' AND user_id = -1";
-			$query = mysqli_query($con,$sql);
-			if (mysqli_num_rows($query) > 0) {
+			$query = $dbh->query($sql);
+			if ($query->rowCount() > 0) {
 				echo "
 					<div class='alert alert-warning'>
 							<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
@@ -256,7 +255,7 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || isse
 			$sql = "INSERT INTO `cart`
 			(`p_id`, `ip_add`, `user_id`, `qty`) 
 			VALUES ('$p_id','$ip_add','-1','1')";
-			if (mysqli_query($con,$sql)) {
+			if ($dbh->query($sql)->rowCount()) {
 				echo "
 					<div class='alert alert-success'>
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
@@ -282,9 +281,8 @@ if (isset($_POST["count_item"])) {
 		//When user is not logged in then we will count number of item in cart by using users unique ip address
 		$sql = "SELECT COUNT(*) AS count_item FROM cart WHERE ip_add = '$ip_add' AND user_id < 0";
 	}
-	
-	$query = mysqli_query($con,$sql);
-	$row = mysqli_fetch_array($query);
+	$query = $dbh->query($sql);
+	$row = $query->fetch();
 	echo $row["count_item"];
 	exit();
 }
@@ -300,13 +298,13 @@ if (isset($_POST["Common"])) {
 		//When user is not logged in this query will execute
 		$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.ip_add='$ip_add' AND b.user_id < 0";
 	}
-	$query = mysqli_query($con,$sql);
+	$query = $dbh->query($sql);
 	if (isset($_POST["getCartItem"])) {
 		//display cart item in dropdown menu
-		if (mysqli_num_rows($query) > 0) {
+		if ($query->rowCount() > 0) {
 			$n=0;
 			$total_price=0;
-			while ($row=mysqli_fetch_array($query)) {
+			foreach ($query as $row) {
                 
 				$n++;
 				$product_id = $row["product_id"];
@@ -351,7 +349,7 @@ if (isset($_POST["Common"])) {
     
     
     if (isset($_POST["checkOutDetails"])) {
-		if (mysqli_num_rows($query) > 0) {
+		if ($query->rowCount() > 0) {
 			//display user cart item with "Ready to checkout" button if user is not login
 			echo '<div class="main ">
 			<div class="table-responsive">
@@ -370,7 +368,7 @@ if (isset($_POST["Common"])) {
 					<tbody>
                     ';
 				$n=0;
-				while ($row=mysqli_fetch_array($query)) {
+				foreach ($query as $row) {
 					$n++;
 					$product_id = $row["product_id"];
 					$product_title = $row["product_title"];
@@ -449,8 +447,8 @@ if (isset($_POST["Common"])) {
 							  
 							$x=0;
 							$sql = "SELECT a.product_id,a.product_title,a.product_price,a.product_image,b.id,b.qty FROM products a,cart b WHERE a.product_id=b.p_id AND b.user_id='$_SESSION[uid]'";
-							$query = mysqli_query($con,$sql);
-							while($row=mysqli_fetch_array($query)){
+							$query = $dbh->$query($sql);
+							foreach($query as $row){
 								$x++;
 								echo  	
 
@@ -491,7 +489,7 @@ if (isset($_POST["removeItemFromCart"])) {
 	}else{
 		$sql = "DELETE FROM cart WHERE p_id = '$remove_id' AND ip_add = '$ip_add'";
 	}
-	if(mysqli_query($con,$sql)){
+	if($dbh->query($sql)->rowCount()){
 		echo "<div class='alert alert-danger'>
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
 						<b>商品已从购物车取消</b>
@@ -510,7 +508,7 @@ if (isset($_POST["updateCartItem"])) {
 	}else{
 		$sql = "UPDATE cart SET qty='$qty' WHERE p_id = '$update_id' AND ip_add = '$ip_add'";
 	}
-	if(mysqli_query($con,$sql)){
+	if($dbh->query($sql)->rowCount()){
 		echo "<div class='alert alert-info'>
 						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
 						<b>商品已更新</b>

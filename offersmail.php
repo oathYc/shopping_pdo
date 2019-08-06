@@ -23,8 +23,8 @@ if (isset($_POST["email"])) {
 		exit();
 	}
         $sql = "SELECT email_id FROM email_info WHERE email = '$email' LIMIT 1" ;
-        $check_query = mysqli_query($con,$sql);
-        $count_email = mysqli_num_rows($check_query);
+        $check_query = $dbh->query($sql);
+        $count_email = $check_query->rowCount();;
         if($count_email > 0){
             echo "
                 <div class='alert alert-danger'>
@@ -38,7 +38,7 @@ if (isset($_POST["email"])) {
             $sql = "INSERT INTO `email_info` 
             (`email_id`, `email`)
             VALUES (NULL, '$email')";
-            $run_query = mysqli_query($con,$sql);
+            $run_query = $dbh->query($sql);
                 echo "<div class='alert alert-success'>
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                     <b>Thanks for subscribing</b>

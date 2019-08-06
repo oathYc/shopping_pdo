@@ -62,13 +62,11 @@ $_SESSION['turn'] =1;
 								
 								$sql = " SELECT * FROM products ";
 								$sql = " SELECT * FROM products WHERE product_id = $product_id";
-								if (!$con) {
-									die("Connection failed: " . mysqli_connect_error());
-								}
-								$result = mysqli_query($con, $sql);
-								if (mysqli_num_rows($result) > 0) 
+
+								$result = $dbh->query($sql);
+								if ($result->rowCount() > 0)
 								{
-									while($row = mysqli_fetch_assoc($result)) 
+									foreach($result as $row)
 									{
 									echo '
 									
@@ -425,10 +423,10 @@ $_SESSION['turn'] =1;
 								$product_id = $_GET['p'];
                     
 					$product_query = "SELECT * FROM products,categories WHERE product_cat=cat_id AND product_id BETWEEN $product_id AND $product_id+3";
-                $run_query = mysqli_query($con,$product_query);
-                if(mysqli_num_rows($run_query) > 0){
+					$run_query = $dbh->query($product_query);
+                if($run_query->rowCount() > 0){
 
-                    while($row = mysqli_fetch_array($run_query)){
+                    foreach($run_query as $row){
                         $pro_id    = $row['product_id'];
                         $pro_cat   = $row['product_cat'];
                         $pro_brand = $row['product_brand'];

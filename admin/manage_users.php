@@ -7,7 +7,7 @@ if(isset($_GET['action']) && $_GET['action']!="" && $_GET['action']=='delete')
 $user_id=$_GET['user_id'];
 
 /*this is delet quer*/
-mysqli_query($con,"delete from user_info where user_id='$user_id'")or die("query is incorrect...");
+$result = $dbh->query("delete from user_info where user_id='$user_id'")or die("query is incorrect...");
 }
 ?>
 <!DOCTYPE html>
@@ -38,11 +38,15 @@ mysqli_query($con,"delete from user_info where user_id='$user_id'")or die("query
                 <th>用户密码</th>
 	<th><a href="add_user.php">新增</a></th></tr>
 <?php 
-$result=mysqli_query($con,"select user_id,first_name, email, password,mobile from user_info")or die ("query 2 incorrect.......");
+$result=$dbh->query("select user_id,first_name, email, password,mobile from user_info")or die ("query 2 incorrect.......");
+foreach($result as $arr){
 
-while(list($user_id,$user_name,$user_email,$user_password,$user_mobile)=
-mysqli_fetch_array($result))
-{
+$user_id = $arr['user_id'];
+$user_name = $arr['first_name'];
+$user_email = $arr['email'];
+$user_password  = $arr['password'];
+$user_mobile = $arr['mobile'];
+
 echo "<tr><td>$user_name</td><td>$user_email</td><td>$user_password</td><td>$user_mobile</td>";
 
 echo"<td>
@@ -50,7 +54,6 @@ echo"<td>
 <a href='manage_users.php?user_id=$user_id&action=delete'>删除</a>
 </td></tr>";
 }
-mysqli_close($con);
 ?>
 </table>
 </div>	

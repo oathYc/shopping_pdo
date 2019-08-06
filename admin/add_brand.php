@@ -6,10 +6,9 @@ if(isset($_POST['btn_save']))
 {
     $brand_name = $_POST['brand_name'];
 
-    mysqli_query($con,"insert into brands(brand_title) values ('$brand_name')")
+    $dbh->query("insert into brands(brand_title) values ('$brand_name')")
     or die ("Query 1 is inncorrect........");
     header("location: brand.php");
-    mysqli_close($con);
 }
 ?>
 <!DOCTYPE html>

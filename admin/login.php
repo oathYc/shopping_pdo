@@ -5,8 +5,8 @@ session_start();
         $userName = $_POST['userName'];
         $userPass = $_POST['userPass'];
         $userPass = md5($userPass);
-        $result = mysqli_query($con,"select * from admin_info where admin_name='$userName' and admin_password = '$userPass' and admin_id = 1")or die('query is incorrect ...');
-        if($row = mysqli_fetch_row($result)){
+        $result = $dbh->query("select * from admin_info where admin_name='$userName' and admin_password = '$userPass' and admin_id = 1")or die('query is incorrect ...');
+        if($result->rowCount()){
             $_SESSION['admin'] = 'admin';
             $_SESSION['adminId'] = 1;
             header("Location:index.php");

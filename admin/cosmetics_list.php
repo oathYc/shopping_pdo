@@ -7,10 +7,10 @@ if(isset($_GET['action']) && $_GET['action']!="" && $_GET['action']=='delete')
 {
 $product_id=$_GET['product_id'];
 ///////picture delete/////////
-$result=mysqli_query($con,"select product_image from products where product_id='$product_id")
+$result=$dbh->query("select product_image from products where product_id='$product_id")
 or die("query is incorrect...");
 
-list($picture)=mysqli_fetch_array($result);
+$picture=$result->fetch()['product_image'];
 $path="../product_images/$picture";
 
 if(file_exists($path)==true)
@@ -20,7 +20,7 @@ if(file_exists($path)==true)
 else
 {}
 /*this is delet query*/
-mysqli_query($con,"delete from products where product_id='$product_id'")or die("query is incorrect...");
+$dbh->query("delete from products where product_id='$product_id'")or die("query is incorrect...");
 } 
 
 ///pagination
@@ -57,14 +57,14 @@ $page1=($page*10)-10;
     <tr><th>图片</th><th>名称</th><th>价格</th><th>
             <a class=" btn btn-primary" href="add_product.php">添加商品</a></th></tr>
     <?php
-    $result=mysqli_query($con,"select product_id,product_image, product_title,product_price from products  where  product_cat=1 or product_cat=7 Limit $page1,10")or die ("query 1 incorrect.....");
+    $result=$dbh->query("select product_id,product_image, product_title,product_price from products  where  product_cat=1 or product_cat=7 Limit $page1,10")or die ("query 1 incorrect.....");
 
-while(list($product_id,$image,$product_name,$price)=mysqli_fetch_array($result))
+foreach($result as $row)
 {
-echo "<tr><td><img src='../product_images/$image' style='width:50px; height:50px;border:groove #000'></td><td>$product_name</td><td>$price</td>
+echo "<tr><td><img src='../product_images/".$row['image']."' style='width:50px; height:50px;border:groove #000'></td><td>".$row['product_name']."</td><td>".$row['price']."</td>
 <td>
 
-<a class=' btn btn-success' href='cosmetics_list.php?product_id=$product_id&action=delete'>删除</a>
+<a class=' btn btn-success' href='cosmetics_list.php?product_id=".$row['product_id']."&action=delete'>删除</a>
 </td></tr>";
 }
 
@@ -76,8 +76,8 @@ echo "<tr><td><img src='../product_images/$image' style='width:50px; height:50px
 <?php 
 //counting paging
 
-$paging=mysqli_query($con,"select product_id,product_image, product_title,product_price from products");
-$count=mysqli_num_rows($paging);
+$paging=$dbh->query("select product_id,product_image, product_title,product_price from products");
+$count=$paging->rowCount();
 
 $a=$count/5;
 $a=ceil($a);

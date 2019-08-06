@@ -98,8 +98,8 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 	}
 	//existing email address in our database
 	$sql = "SELECT user_id FROM user_info WHERE email = '$email' LIMIT 1" ;
-	$check_query = mysqli_query($con,$sql);
-	$count_email = mysqli_num_rows($check_query);
+	$check_query = $dbh->query($sql);
+	$count_email = $check_query->rowCount();
 	if($count_email > 0){
 		echo "
 			<div class='alert alert-danger'>
@@ -115,12 +115,13 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 		`password`, `mobile`, `address1`, `address2`) 
 		VALUES (NULL, '$f_name', '$l_name', '$email', 
 		'$password', '$mobile', '$address1', '$address2')";
-		$run_query = mysqli_query($con,$sql);
-		$_SESSION["uid"] = mysqli_insert_id($con);
+		$run_query = $dbh->query($sql);
+		$_SESSION["uid"] = $dbh->lastInsertId();
+
 		$_SESSION["name"] = $f_name;
 		$ip_add = getenv("REMOTE_ADDR");
 		$sql = "UPDATE cart SET user_id = '$_SESSION[uid]' WHERE ip_add='$ip_add' AND user_id = -1";
-		if(mysqli_query($con,$sql)){
+		if($dbh->query($sql)->rowCount()){
 			echo "register_success";
 			echo "<script> location.href='store.php'; </script>";
             exit;
