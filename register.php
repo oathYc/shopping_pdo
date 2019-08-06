@@ -111,22 +111,29 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 	} else {
 		
 		$sql = "INSERT INTO `user_info` 
-		(`user_id`, `first_name`, `last_name`, `email`, 
+		( `first_name`, `last_name`, `email`, 
 		`password`, `mobile`, `address1`, `address2`) 
-		VALUES (NULL, '$f_name', '$l_name', '$email', 
+		VALUES ( '$f_name', '$l_name', '$email', 
 		'$password', '$mobile', '$address1', '$address2')";
 		$run_query = $dbh->query($sql);
-		$_SESSION["uid"] = $dbh->lastInsertId();
-
-		$_SESSION["name"] = $f_name;
-		$ip_add = getenv("REMOTE_ADDR");
-		$uid = $_SESSION['uid'];
-		$sql = "UPDATE cart SET user_id = '$uid' WHERE ip_add='$ip_add' AND user_id = -1";
-		if($dbh->query($sql)->rowCount()){
-			echo "register_success";
-			echo "<script> location.href='store.php'; </script>";
-            exit;
+		var_dump($run_query);
+		if($run_query->rowCount()){
+			echo '注册失败，请重试';exit;
+		}else{
+			$lastId = $dbh->lastInsertId();
+			var_dump($lastId);
+			$_SESSION["uid"] =$lastId;
+			$_SESSION["name"] = $f_name;
+			$ip_add = getenv("REMOTE_ADDR");
+			$uid = $_SESSION['uid'];
+			$sql = "UPDATE cart SET user_id = '$uid' WHERE ip_add='$ip_add' AND user_id = -1";
+			if($dbh->query($sql)->rowCount()){
+				echo "register_success";
+				echo "<script> location.href='store.php'; </script>";
+				exit;
+			}
 		}
+
 	}
 	}
 	

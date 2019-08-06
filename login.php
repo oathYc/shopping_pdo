@@ -66,7 +66,10 @@ if(isset($_POST["email"]) && isset($_POST["password"])){
 			
             exit;
 
-		}
+		}else{
+	    echo '邮箱或密码错误！';
+	    exit;
+    }
     
 	
 }

@@ -132,10 +132,8 @@ session_start();
                              include "db.php";
                             if(isset($_SESSION["uid"])){
                                 $uid = $_SESSION['uid'];
-                                var_dump($uid);
                                 $sql = "SELECT first_name FROM user_info WHERE user_id='$uid'";
                                 $row = $dbh->query($sql)->fetch();
-                                var_dump($row);
                                     echo '
                                <div class="dropdownn">
                                <input type="hidden" id="loginUser" value="'.$_SESSION['uid'].'" />
