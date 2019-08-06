@@ -129,7 +129,7 @@ session_start();
 					<ul class="header-links pull-right">
 <!--						<li><a href="#"><i class="fa fa-inr"></i> INR</a></li>-->
 						<li><?php
-                             include "./db.php";
+                             include "db.php";
                             if(isset($_SESSION["uid"])){
                                 $sql = "SELECT first_name FROM user_info WHERE user_id='$_SESSION[uid]'";
                                 foreach($dbh->query($sql) as $row){
@@ -139,7 +139,7 @@ session_start();
                                   <a href="#" class="dropdownn" data-toggle="modal" data-target="#myModal" ><i class="fa fa-user-o"></i>  '.$row["first_name"].'</a>
                                   <div class="dropdownn-content">
                                     <a href="" data-toggle="modal" data-target="#profile"><i class="fa fa-user-circle" aria-hidden="true" ></i>账号</a>
-                                    <a href="logout.php"  ><i class="fa fa-sign-in" aria-hidden="true"></i>Log out</a>
+                                    <a href="logout.php"  ><i class="fa fa-sign-in" aria-hidden="true"></i>注销</a>
                                     
                                   </div>
                                 </div>';
