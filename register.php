@@ -120,7 +120,8 @@ if(empty($f_name) || empty($l_name) || empty($email) || empty($password) || empt
 
 		$_SESSION["name"] = $f_name;
 		$ip_add = getenv("REMOTE_ADDR");
-		$sql = "UPDATE cart SET user_id = '$_SESSION[uid]' WHERE ip_add='$ip_add' AND user_id = -1";
+		$uid = $_SESSION['uid'];
+		$sql = "UPDATE cart SET user_id = '$uid' WHERE ip_add='$ip_add' AND user_id = -1";
 		if($dbh->query($sql)->rowCount()){
 			echo "register_success";
 			echo "<script> location.href='store.php'; </script>";

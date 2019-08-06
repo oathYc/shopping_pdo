@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "db.php";
 
-session_start();
 
 #Login script is begin here
 #If user given credential matches successfully with the data available in database then we will echo string login_success
@@ -21,18 +21,18 @@ if(isset($_POST["email"]) && isset($_POST["password"])){
         
 	//if user record is available in database then $count will be equal to 1
 	if($count == 1){
-		   	
+        $uid  = $row["user_id"];
 			if (isset($_COOKIE["product_list"])) {
 				$p_list = stripcslashes($_COOKIE["product_list"]);
 				//here we are decoding stored json product list cookie to normal array
 				$product_list = json_decode($p_list,true);
 				for ($i=0; $i < count($product_list); $i++) { 
 					//After getting user id from database here we are checking user cart item if there is already product is listed or not
-					$verify_cart = "SELECT id FROM cart WHERE user_id = $_SESSION[uid] AND p_id = ".$product_list[$i];
+					$verify_cart = "SELECT id FROM cart WHERE user_id = '$uid' AND p_id = ".$product_list[$i];
 					$result = $dbh->query($verify_cart);
 					if($result->rowCount() < 1){
 						//if user is adding first time product into cart we will update user_id into database table with valid id
-						$update_cart = "UPDATE cart SET user_id = '$_SESSION[uid]' WHERE ip_add = '$ip_add' AND user_id = -1";
+						$update_cart = "UPDATE cart SET user_id = '$uid' WHERE ip_add = '$ip_add' AND user_id = -1";
 						$dbh->query($update_cart);
 					}else{
 						//if already that product is available into database table we will delete that record
